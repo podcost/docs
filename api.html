@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PodCost API Documentation</title>
+    <meta name="description" content="PodCost API documentation. Learn how to integrate cost data into your own tools and dashboards.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #0a0a0a;
+            color: #e4e4e7;
+            line-height: 1.6;
+        }
+
+        a {
+            color: #10b981;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 18px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo:hover {
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #10b981, #06b6d4);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: white;
+        }
+
+        .logo span {
+            color: #10b981;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-links a {
+            color: #a1a1aa;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            color: #10b981;
+        }
+
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px 24px;
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 48px;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+        }
+
+        .sidebar-section {
+            margin-bottom: 24px;
+        }
+
+        .sidebar-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #71717a;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-links {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-links a {
+            color: #a1a1aa;
+            font-size: 14px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .sidebar-links a:hover {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            text-decoration: none;
+        }
+
+        .content {
+            min-width: 0;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: white;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 48px;
+            margin-bottom: 16px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: #a1a1aa;
+        }
+
+        .intro {
+            font-size: 18px;
+            color: #a1a1aa;
+            margin-bottom: 32px;
+        }
+
+        .endpoint {
+            background: #18181b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .endpoint-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .method {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .method-get {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .method-post {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        .method-delete {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .endpoint-path {
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 14px;
+            color: white;
+        }
+
+        .endpoint-body {
+            padding: 20px;
+        }
+
+        .endpoint-desc {
+            margin-bottom: 16px;
+        }
+
+        .params-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #71717a;
+            margin-bottom: 8px;
+        }
+
+        .params-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .params-table th {
+            text-align: left;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #71717a;
+            font-weight: 500;
+        }
+
+        .params-table td {
+            padding: 8px 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .params-table code {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .code-block {
+            background: #09090b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+            margin-bottom: 16px;
+        }
+
+        .code-block pre {
+            font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #e4e4e7;
+            margin: 0;
+        }
+
+        .code-block .comment {
+            color: #71717a;
+        }
+
+        .code-block .string {
+            color: #10b981;
+        }
+
+        .code-block .number {
+            color: #f59e0b;
+        }
+
+        .code-block .key {
+            color: #3b82f6;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 4px;
+            font-size: 12px;
+            color: #10b981;
+        }
+
+        .badge-pro {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: rgba(139, 92, 246, 0.2);
+            color: #8b5cf6;
+        }
+
+        .alert {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            color: #3b82f6;
+            margin-bottom: 4px;
+        }
+
+        .alert p {
+            color: #93c5fd;
+            margin: 0;
+        }
+
+        .footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 24px;
+            text-align: center;
+            color: #71717a;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #10b981;
+        }
+
+        @media (max-width: 768px) {
+            .main {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+
+            .sidebar-section {
+                margin-bottom: 0;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <div class="logo-icon">$</div>
+                Pod<span>Cost</span>.io
+            </a>
+            <nav class="nav-links">
+                <a href="https://podcost.io">Home</a>
+                <a href="/">Docs</a>
+                <a href="https://github.com/podcost">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Getting Started</div>
+                <div class="sidebar-links">
+                    <a href="#introduction">Introduction</a>
+                    <a href="#authentication">Authentication</a>
+                    <a href="#rate-limits">Rate Limits</a>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">Endpoints</div>
+                <div class="sidebar-links">
+                    <a href="#clusters">Clusters</a>
+                    <a href="#costs">Costs</a>
+                    <a href="#cost-breakdown">Cost Breakdown</a>
+                    <a href="#recommendations">Recommendations</a>
+                    <a href="#alerts">Alerts</a>
+                    <a href="#insights">AI Insights</a>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">Resources</div>
+                <div class="sidebar-links">
+                    <a href="#errors">Error Handling</a>
+                    <a href="#examples">Examples</a>
+                </div>
+            </div>
+        </aside>
+
+        <div class="content">
+            <h1>API Reference</h1>
+            <p class="intro">
+                The PodCost API allows you to programmatically access your Kubernetes cost data, recommendations, and alerts.
+                Integrate cost visibility into your own tools, dashboards, and automation workflows.
+            </p>
+
+            <div class="alert">
+                <div class="alert-title">Pro Feature</div>
+                <p>API access requires a Pro or Enterprise subscription. <a href="https://podcost.io/pricing">Upgrade your plan</a> to get started.</p>
+            </div>
+
+            <h2 id="introduction">Introduction</h2>
+            <p>
+                The PodCost API is a RESTful API that returns JSON responses. All endpoints are accessed via <code>https://podcost.io/api/v1/</code>.
+            </p>
+            <p>
+                The API uses standard HTTP methods (GET, POST, DELETE) and returns appropriate HTTP status codes. All timestamps are in ISO 8601 format.
+            </p>
+
+            <h2 id="authentication">Authentication</h2>
+            <p>
+                All API requests require authentication using an API key. Include your API key in the <code>Authorization</code> header as a Bearer token:
+            </p>
+            <div class="code-block">
+                <pre>Authorization: Bearer pc_api_your_api_key_here</pre>
+            </div>
+            <p>
+                You can create and manage API keys in your <a href="https://podcost.io/settings">Settings</a> page.
+                API keys are shown only once when created, so make sure to copy and store them securely.
+            </p>
+
+            <h3>Creating an API Key</h3>
+            <ol style="margin-left: 24px; margin-bottom: 16px; color: #a1a1aa;">
+                <li>Go to <a href="https://podcost.io/settings">Settings</a></li>
+                <li>Scroll to the "API Keys" section</li>
+                <li>Click "Create API Key"</li>
+                <li>Enter a descriptive name (e.g., "Production Dashboard")</li>
+                <li>Copy the generated key immediately - it won't be shown again</li>
+            </ol>
+
+            <h2 id="rate-limits">Rate Limits</h2>
+            <p>
+                API requests are rate limited to ensure fair usage:
+            </p>
+            <table class="params-table">
+                <tr>
+                    <th>Plan</th>
+                    <th>Rate Limit</th>
+                </tr>
+                <tr>
+                    <td>Pro</td>
+                    <td>1,000 requests/hour</td>
+                </tr>
+                <tr>
+                    <td>Enterprise</td>
+                    <td>10,000 requests/hour</td>
+                </tr>
+            </table>
+            <p>
+                Rate limit information is included in response headers:
+            </p>
+            <div class="code-block">
+                <pre>X-RateLimit-Limit: 1000
+X-RateLimit-Remaining: 999
+X-RateLimit-Reset: 1705320000</pre>
+            </div>
+
+            <h2 id="clusters">List Clusters</h2>
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method method-get">GET</span>
+                    <span class="endpoint-path">/api/v1/clusters</span>
+                </div>
+                <div class="endpoint-body">
+                    <p class="endpoint-desc">Returns a list of all clusters accessible to your account.</p>
+
+                    <div class="params-title">Response</div>
+                    <div class="code-block">
+                        <pre>{
+  <span class="key">"data"</span>: [
+    {
+      <span class="key">"id"</span>: <span class="string">"123"</span>,
+      <span class="key">"name"</span>: <span class="string">"production-us-east"</span>,
+      <span class="key">"displayName"</span>: <span class="string">"Production US East"</span>,
+      <span class="key">"cloudProvider"</span>: <span class="string">"aws-eks"</span>,
+      <span class="key">"region"</span>: <span class="string">"us-east-1"</span>,
+      <span class="key">"status"</span>: <span class="string">"active"</span>,
+      <span class="key">"lastSeenAt"</span>: <span class="string">"2024-01-15T10:30:00Z"</span>,
+      <span class="key">"createdAt"</span>: <span class="string">"2024-01-01T00:00:00Z"</span>
+    }
+  ],
+  <span class="key">"meta"</span>: {
+    <span class="key">"total"</span>: <span class="number">1</span>
+  }
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <h2 id="costs">Get Costs</h2>
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method method-get">GET</span>
+                    <span class="endpoint-path">/api/v1/clusters/{cluster_id}/costs</span>
+                </div>
+                <div class="endpoint-body">
+                    <p class="endpoint-desc">Returns cost summary and time series data for a specific cluster.</p>
+
+                    <div class="params-title">Query Parameters</div>
+                    <table class="params-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><code>range</code></td>
+                            <td>string</td>
+                            <td>Time range: <code>24h</code>, <code>7d</code>, <code>30d</code>. Default: <code>7d</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>granularity</code></td>
+                            <td>string</td>
+                            <td>Data granularity: <code>hourly</code>, <code>daily</code>. Default: <code>daily</code></td>
+                        </tr>
+                    </table>
+
+                    <div class="params-title">Response</div>
+                    <div class="code-block">
+                        <pre>{
+  <span class="key">"data"</span>: {
+    <span class="key">"summary"</span>: {
+      <span class="key">"totalCost"</span>: <span class="number">1234.56</span>,
+      <span class="key">"computeCost"</span>: <span class="number">1000.00</span>,
+      <span class="key">"gpuCost"</span>: <span class="number">234.56</span>,
+      <span class="key">"potentialSavings"</span>: <span class="number">150.00</span>,
+      <span class="key">"efficiency"</span>: <span class="number">72.5</span>
+    },
+    <span class="key">"timeSeries"</span>: [
+      {
+        <span class="key">"timestamp"</span>: <span class="string">"2024-01-14T00:00:00Z"</span>,
+        <span class="key">"cost"</span>: <span class="number">41.23</span>,
+        <span class="key">"computeCost"</span>: <span class="number">35.00</span>,
+        <span class="key">"gpuCost"</span>: <span class="number">6.23</span>
+      }
+    ]
+  },
+  <span class="key">"meta"</span>: {
+    <span class="key">"clusterId"</span>: <span class="string">"123"</span>,
+    <span class="key">"clusterName"</span>: <span class="string">"production-us-east"</span>,
+    <span class="key">"range"</span>: <span class="string">"7d"</span>,
+    <span class="key">"currency"</span>: <span class="string">"USD"</span>
+  }
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <h2 id="cost-breakdown">Cost Breakdown</h2>
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method method-get">GET</span>
+                    <span class="endpoint-path">/api/v1/clusters/{cluster_id}/costs/breakdown</span>
+                </div>
+                <div class="endpoint-body">
+                    <p class="endpoint-desc">Returns cost breakdown grouped by namespace, workload, or node.</p>
+
+                    <div class="params-title">Query Parameters</div>
+                    <table class="params-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><code>range</code></td>
+                            <td>string</td>
+                            <td>Time range: <code>24h</code>, <code>7d</code>, <code>30d</code>. Default: <code>7d</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>groupBy</code></td>
+                            <td>string</td>
+                            <td>Group by: <code>namespace</code>, <code>workload</code>, <code>node</code>. Default: <code>namespace</code></td>
+                        </tr>
+                    </table>
+
+                    <div class="params-title">Response</div>
+                    <div class="code-block">
+                        <pre>{
+  <span class="key">"data"</span>: {
+    <span class="key">"breakdown"</span>: [
+      {
+        <span class="key">"name"</span>: <span class="string">"production"</span>,
+        <span class="key">"cost"</span>: <span class="number">500.00</span>,
+        <span class="key">"percentage"</span>: <span class="number">40.5</span>,
+        <span class="key">"cpuCost"</span>: <span class="number">400.00</span>,
+        <span class="key">"memoryCost"</span>: <span class="number">80.00</span>,
+        <span class="key">"gpuCost"</span>: <span class="number">20.00</span>
+      }
+    ],
+    <span class="key">"totalCost"</span>: <span class="number">1234.56</span>
+  },
+  <span class="key">"meta"</span>: {
+    <span class="key">"clusterId"</span>: <span class="string">"123"</span>,
+    <span class="key">"groupBy"</span>: <span class="string">"namespace"</span>,
+    <span class="key">"range"</span>: <span class="string">"7d"</span>
+  }
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <h2 id="recommendations">Recommendations</h2>
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method method-get">GET</span>
+                    <span class="endpoint-path">/api/v1/clusters/{cluster_id}/recommendations</span>
+                </div>
+                <div class="endpoint-body">
+                    <p class="endpoint-desc">Returns cost-saving recommendations for a cluster.</p>
+
+                    <div class="params-title">Query Parameters</div>
+                    <table class="params-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><code>type</code></td>
+                            <td>string</td>
+                            <td>Filter by type: <code>all</code>, <code>idle</code>, <code>rightsizing</code>, <code>spot</code>. Default: <code>all</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>minSavings</code></td>
+                            <td>number</td>
+                            <td>Minimum monthly savings to include. Default: <code>0</code></td>
+                        </tr>
+                    </table>
+
+                    <div class="params-title">Response</div>
+                    <div class="code-block">
+                        <pre>{
+  <span class="key">"data"</span>: {
+    <span class="key">"summary"</span>: {
+      <span class="key">"totalPotentialSavings"</span>: <span class="number">450.00</span>,
+      <span class="key">"recommendationCount"</span>: <span class="number">12</span>,
+      <span class="key">"byType"</span>: {
+        <span class="key">"idle"</span>: { <span class="key">"count"</span>: <span class="number">5</span>, <span class="key">"savings"</span>: <span class="number">200.00</span> },
+        <span class="key">"rightsizing"</span>: { <span class="key">"count"</span>: <span class="number">4</span>, <span class="key">"savings"</span>: <span class="number">150.00</span> }
+      }
+    },
+    <span class="key">"recommendations"</span>: [
+      {
+        <span class="key">"id"</span>: <span class="string">"rec-123"</span>,
+        <span class="key">"type"</span>: <span class="string">"idle"</span>,
+        <span class="key">"priority"</span>: <span class="string">"high"</span>,
+        <span class="key">"resourceType"</span>: <span class="string">"deployment"</span>,
+        <span class="key">"resourceName"</span>: <span class="string">"unused-api"</span>,
+        <span class="key">"namespace"</span>: <span class="string">"default"</span>,
+        <span class="key">"description"</span>: <span class="string">"Deployment has 0% CPU usage over 7 days"</span>,
+        <span class="key">"monthlySavings"</span>: <span class="number">45.00</span>,
+        <span class="key">"action"</span>: <span class="string">"Consider removing or scaling down"</span>
+      }
+    ]
+  },
+  <span class="key">"meta"</span>: {
+    <span class="key">"clusterId"</span>: <span class="string">"123"</span>,
+    <span class="key">"currency"</span>: <span class="string">"USD"</span>
+  }
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <h2 id="alerts">Alerts</h2>
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method method-get">GET</span>
+                    <span class="endpoint-path">/api/v1/clusters/{cluster_id}/alerts</span>
+                </div>
+                <div class="endpoint-body">
+                    <p class="endpoint-desc">Returns alerts and anomalies for a cluster.</p>
+
+                    <div class="params-title">Query Parameters</div>
+                    <table class="params-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><code>status</code></td>
+                            <td>string</td>
+                            <td>Filter by status: <code>active</code>, <code>acknowledged</code>, <code>resolved</code>, <code>all</code>. Default: <code>active</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>severity</code></td>
+                            <td>string</td>
+                            <td>Filter by severity: <code>critical</code>, <code>warning</code>, <code>info</code>, <code>all</code>. Default: <code>all</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>limit</code></td>
+                            <td>number</td>
+                            <td>Maximum results to return. Default: <code>50</code></td>
+                        </tr>
+                    </table>
+
+                    <div class="params-title">Response</div>
+                    <div class="code-block">
+                        <pre>{
+  <span class="key">"data"</span>: {
+    <span class="key">"summary"</span>: {
+      <span class="key">"total"</span>: <span class="number">8</span>,
+      <span class="key">"bySeverity"</span>: { <span class="key">"critical"</span>: <span class="number">1</span>, <span class="key">"warning"</span>: <span class="number">3</span>, <span class="key">"info"</span>: <span class="number">4</span> },
+      <span class="key">"byStatus"</span>: { <span class="key">"active"</span>: <span class="number">5</span>, <span class="key">"acknowledged"</span>: <span class="number">2</span>, <span class="key">"resolved"</span>: <span class="number">1</span> }
+    },
+    <span class="key">"alerts"</span>: [
+      {
+        <span class="key">"id"</span>: <span class="number">123</span>,
+        <span class="key">"type"</span>: <span class="string">"cost"</span>,
+        <span class="key">"category"</span>: <span class="string">"cost_spike"</span>,
+        <span class="key">"severity"</span>: <span class="string">"warning"</span>,
+        <span class="key">"status"</span>: <span class="string">"active"</span>,
+        <span class="key">"title"</span>: <span class="string">"Cost Spike Detected"</span>,
+        <span class="key">"message"</span>: <span class="string">"Cost increased 25% in namespace 'production'"</span>,
+        <span class="key">"resource"</span>: {
+          <span class="key">"kind"</span>: <span class="string">"Namespace"</span>,
+          <span class="key">"name"</span>: <span class="string">"production"</span>
+        },
+        <span class="key">"createdAt"</span>: <span class="string">"2024-01-15T08:00:00Z"</span>
+      }
+    ]
+  },
+  <span class="key">"meta"</span>: {
+    <span class="key">"clusterId"</span>: <span class="string">"123"</span>
+  }
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <h2 id="insights">AI Insights</h2>
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method method-get">GET</span>
+                    <span class="endpoint-path">/api/v1/clusters/{cluster_id}/insights</span>
+                </div>
+                <div class="endpoint-body">
+                    <p class="endpoint-desc">Returns AI-generated cost insights and recommendations.</p>
+
+                    <div class="params-title">Response</div>
+                    <div class="code-block">
+                        <pre>{
+  <span class="key">"data"</span>: {
+    <span class="key">"summary"</span>: <span class="string">"Your production cluster is running at 72% efficiency..."</span>,
+    <span class="key">"metrics"</span>: {
+      <span class="key">"monthlyCost"</span>: <span class="number">1234.56</span>,
+      <span class="key">"potentialSavings"</span>: <span class="number">150.00</span>,
+      <span class="key">"efficiency"</span>: <span class="number">72.5</span>,
+      <span class="key">"gpuCost"</span>: <span class="number">234.56</span>,
+      <span class="key">"cpuCost"</span>: <span class="number">1000.00</span>
+    },
+    <span class="key">"wasteDrivers"</span>: [
+      <span class="string">"Idle deployments in default namespace"</span>,
+      <span class="string">"Over-provisioned redis pods"</span>
+    ],
+    <span class="key">"topActions"</span>: [
+      <span class="string">"Remove 3 idle deployments to save $120/month"</span>,
+      <span class="string">"Rightsize redis pods to save $30/month"</span>
+    ],
+    <span class="key">"generatedAt"</span>: <span class="string">"2024-01-15T10:00:00Z"</span>
+  },
+  <span class="key">"meta"</span>: {
+    <span class="key">"clusterId"</span>: <span class="string">"123"</span>,
+    <span class="key">"hasData"</span>: <span class="number">true</span>
+  }
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <h2 id="errors">Error Handling</h2>
+            <p>
+                The API uses standard HTTP status codes to indicate success or failure:
+            </p>
+            <table class="params-table">
+                <tr>
+                    <th>Status Code</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td><code>200</code></td>
+                    <td>Success</td>
+                </tr>
+                <tr>
+                    <td><code>400</code></td>
+                    <td>Bad request - Invalid parameters</td>
+                </tr>
+                <tr>
+                    <td><code>401</code></td>
+                    <td>Unauthorized - Invalid or missing API key</td>
+                </tr>
+                <tr>
+                    <td><code>403</code></td>
+                    <td>Forbidden - Missing required scope or subscription</td>
+                </tr>
+                <tr>
+                    <td><code>404</code></td>
+                    <td>Not found - Cluster not found or no access</td>
+                </tr>
+                <tr>
+                    <td><code>429</code></td>
+                    <td>Too many requests - Rate limit exceeded</td>
+                </tr>
+                <tr>
+                    <td><code>500</code></td>
+                    <td>Server error</td>
+                </tr>
+            </table>
+
+            <p>Error responses include a JSON body:</p>
+            <div class="code-block">
+                <pre>{
+  <span class="key">"error"</span>: <span class="string">"Invalid or revoked API key"</span>,
+  <span class="key">"code"</span>: <span class="string">"INVALID_API_KEY"</span>
+}</pre>
+            </div>
+
+            <h2 id="examples">Examples</h2>
+
+            <h3>cURL</h3>
+            <div class="code-block">
+                <pre><span class="comment"># List clusters</span>
+curl -H "Authorization: Bearer pc_api_your_key" \
+  https://podcost.io/api/v1/clusters
+
+<span class="comment"># Get cost breakdown by namespace</span>
+curl -H "Authorization: Bearer pc_api_your_key" \
+  "https://podcost.io/api/v1/clusters/123/costs/breakdown?groupBy=namespace&range=30d"
+
+<span class="comment"># Get high-priority recommendations</span>
+curl -H "Authorization: Bearer pc_api_your_key" \
+  "https://podcost.io/api/v1/clusters/123/recommendations?minSavings=50"</pre>
+            </div>
+
+            <h3>Python</h3>
+            <div class="code-block">
+                <pre>import requests
+
+API_KEY = "pc_api_your_key"
+BASE_URL = "https://podcost.io/api/v1"
+
+headers = {"Authorization": f"Bearer {API_KEY}"}
+
+<span class="comment"># Get clusters</span>
+response = requests.get(f"{BASE_URL}/clusters", headers=headers)
+clusters = response.json()["data"]
+
+<span class="comment"># Get costs for first cluster</span>
+cluster_id = clusters[0]["id"]
+costs = requests.get(
+    f"{BASE_URL}/clusters/{cluster_id}/costs",
+    params={"range": "7d"},
+    headers=headers
+).json()
+
+print(f"Monthly cost: ${costs['data']['summary']['totalCost']}")</pre>
+            </div>
+
+            <h3>JavaScript</h3>
+            <div class="code-block">
+                <pre>const API_KEY = 'pc_api_your_key';
+const BASE_URL = 'https://podcost.io/api/v1';
+
+async function getCosts(clusterId) {
+  const response = await fetch(
+    `${BASE_URL}/clusters/${clusterId}/costs?range=7d`,
+    {
+      headers: {
+        'Authorization': `Bearer ${API_KEY}`
+      }
+    }
+  );
+
+  const data = await response.json();
+  console.log(`Monthly cost: $${data.data.summary.totalCost}`);
+}</pre>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>
+            <a href="https://podcost.io">PodCost</a> ·
+            <a href="https://github.com/podcost">GitHub</a> ·
+            <a href="mailto:contact@podcost.io">Contact</a>
+        </p>
+    </footer>
+</body>
+</html>
